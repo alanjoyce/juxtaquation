@@ -1,0 +1,4 @@
+juxtaquation
+============
+
+Juxtapaper for equations!
