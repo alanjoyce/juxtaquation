@@ -1,0 +1,16 @@
+body {
+	background: #444;
+	margin: 0;
+}
+
+#main {
+	padding-top: 10px;
+}
+
+#canvas {
+	background: white;
+	box-shadow: 5px 5px 5px #222;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}

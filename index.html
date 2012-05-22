@@ -1,0 +1,199 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title></title>
+  <meta name="description" content="">
+
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="css/style.css">
+
+  <script src="js/libs/modernizr-2.5.3.min.js"></script>
+</head>
+<body>
+  <header>
+
+  </header>
+  <div role="main" id="main">
+		<canvas id="canvas" />
+  </div>
+  <footer>
+
+  </footer>
+
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.1.min.js"><\/script>')</script>
+	
+	<script src="js/libs/json2.js"></script>
+	<script src="js/libs/raphael-min.js"></script>
+	<script src="js/libs/raphael.sketchpad.js"></script>
+	
+  <script src="js/plugins.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>
+
+<script type="text/javascript">
+	//Global variables
+	var canvas
+	var con
+	var sketchpads = new Array()
+	var sketchdivs = new Array()
+	var activePadNum = -1
+	var w
+	var h
+	
+	//When the document loads, set everything up
+	$(document).ready(function() {
+		canvas = document.getElementById("canvas")
+		con = canvas.getContext("2d")
+		
+		//If the window resizes, resize our paper
+		$(window).bind("resize", setupPaper)
+		
+		setupPaper()
+		
+		setActivePad(0)
+	})
+	
+	//Ensure that the paper is the correct size
+	function setupPaper() {
+		h = $(document).height()
+		w = h*0.773
+		if(canvas) {
+			canvas.height = h - 25
+			canvas.width = w
+		}
+		
+		drawPaper()
+	}
+	
+	//Draw the paper
+	function drawPaper() {
+		//Draw the lines
+		var lineHeight = h/12
+		con.beginPath()
+		con.strokeStyle = "#aaa"
+		con.lineWidth = 2
+		var sideWidth = w/10
+		var origin = $(canvas).offset()
+		
+		var thisLine = 0
+		for(var y = h/40 + 0.5; y <= h - lineHeight - 10; y += lineHeight) {
+			//Draw lines above and below
+			con.moveTo(0, y)
+			con.lineTo(w, y)
+			con.moveTo(0, y + lineHeight)
+			con.lineTo(w, y + lineHeight)
+			
+			//Add the sketchpad div element
+			var thisLeft = origin.left + sideWidth + 1
+			var thisTop = origin.top + y + 1
+			var thisWidth = w - sideWidth - 1
+			var thisHeight = lineHeight - 1
+			
+			//Create the div
+			$("#main").append("<div id='sketch" + thisLine + "'></div>")
+			var sketch = $("#sketch" + thisLine)
+			sketch.css({
+				position: "absolute",
+				left: thisLeft + "px",
+				top: thisTop + "px",
+				width: thisWidth + "px",
+				height: thisHeight + "px"
+			})
+			
+			//Create the sketchpad
+			var sketchpad = Raphael.sketchpad("sketch" + thisLine, {
+				width: thisWidth,
+				height: thisHeight,
+				editing: true
+			})
+			sketchpads.push(sketchpad)
+			sketchdivs.push(sketch)
+			
+			thisLine += 1
+		}
+		con.stroke()
+		
+		//Draw the side line
+		con.beginPath()
+		con.strokeStyle = "#ee2222"
+		con.moveTo(sideWidth, 0)
+		con.lineTo(sideWidth, h)
+		con.stroke();
+	}
+	
+	//Returns the currently active sketchpad div
+	function getActiveDiv() {
+		return sketchdivs[activePadNum]
+	}
+	
+	//Returns the next sketchpad div if there is one, otherwise returns null
+	function getNextDiv() {
+		if(activePadNum + 1 < sketchdivs.length) {
+			return sketchdivs[activePadNum + 1]
+		}
+		return null
+	}
+	
+	//Returns the currently active sketchpad
+	function getActivePad() {
+		return sketchpads[activePadNum]
+	}
+	
+	//Returns the next sketchpad if there is one, otherwise returns null
+	function getNextPad() {
+		if(activePadNum + 1 < sketchpads.length) {
+			return sketchpads[activePadNum + 1]
+		}
+		return null
+	}
+	
+	//Sets the active pad and all pad handlers appropriately
+	function setActivePad(padNum) {
+		//If there is an existing active pad, deactivate it
+		if(activePadNum >= 0) {
+			getActivePad().change(null)
+		}
+		
+		//Update the active pad and set handlers appropriately
+		activePadNum = padNum
+		getActivePad().change(editActivePad)
+		var nextDiv = getNextDiv()
+		if(nextDiv) {
+			nextDiv.mousedown(function() {
+				editNextPad($(this).attr('id'))
+			})
+		}
+	}
+	
+	//Handle user edits to the active sketchpad
+	function editActivePad() {
+		//Set the next pad's content to that of the active pad
+		var activePad = getActivePad()
+		var nextPad = getNextPad()
+		if(nextPad) {
+			nextPad.clear()
+			nextPad.strokes(activePad.strokes())
+		}
+	}
+	
+	//Handle user edits to the next sketchpad
+	function editNextPad(padNum) {
+		if(padNum == "sketch" + (activePadNum + 1)) {
+			//Make the next pad the new active pad
+			setActivePad(activePadNum + 1)
+		}
+	}
+</script>
+
+
+
+
