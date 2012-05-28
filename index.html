@@ -106,21 +106,24 @@
 			else {
 				$("#main").append("<div id='sketch" + thisLine + "'></div>")
 				sketch = $("#sketch" + thisLine)
-				sketch.css({
-					position: "absolute",
-					left: thisLeft + "px",
-					top: thisTop + "px",
-					width: thisWidth + "px",
-					height: thisHeight + "px"
-				})
 				sketchdivs.push(sketch)
 			}
 			
+			//Size the div element correctly
+			sketch.css({
+				position: "absolute",
+				left: thisLeft + "px",
+				top: thisTop + "px",
+				width: thisWidth + "px",
+				height: thisHeight + "px"
+			})
 			
 			//Create the sketchpad if it needs to be created
 			var sketchpad
 			if(sketchpads.length > thisLine) {
 				sketchpad = sketchpads[thisLine]
+				sketchpad.width = thisWidth
+				sketchpad.height = thisHeight
 			}
 			else {
 				sketchpad = Raphael.sketchpad("sketch" + thisLine, {
@@ -196,6 +199,8 @@
 			nextPad.clear()
 			nextPad.strokes(activePad.strokes())
 		}
+		
+		clusterStrokes()
 	}
 	
 	//Handle user edits to the next sketchpad
@@ -203,7 +208,13 @@
 		if(padNum == "sketch" + (activePadNum + 1)) {
 			//Make the next pad the new active pad
 			setActivePad(activePadNum + 1)
+			clusterStrokes()
 		}
+	}
+	
+	//Cluster the strokes on the active pad
+	function clusterStrokes() {
+		
 	}
 </script>
 
