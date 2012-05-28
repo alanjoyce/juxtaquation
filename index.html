@@ -98,25 +98,38 @@
 			var thisWidth = w - sideWidth - 1
 			var thisHeight = lineHeight - 1
 			
-			//Create the div
-			$("#main").append("<div id='sketch" + thisLine + "'></div>")
-			var sketch = $("#sketch" + thisLine)
-			sketch.css({
-				position: "absolute",
-				left: thisLeft + "px",
-				top: thisTop + "px",
-				width: thisWidth + "px",
-				height: thisHeight + "px"
-			})
+			//Create the div if it needs to be created
+			var sketch
+			if(sketchdivs.length > thisLine) {
+				sketch = sketchdivs[thisLine]
+			}
+			else {
+				$("#main").append("<div id='sketch" + thisLine + "'></div>")
+				sketch = $("#sketch" + thisLine)
+				sketch.css({
+					position: "absolute",
+					left: thisLeft + "px",
+					top: thisTop + "px",
+					width: thisWidth + "px",
+					height: thisHeight + "px"
+				})
+				sketchdivs.push(sketch)
+			}
 			
-			//Create the sketchpad
-			var sketchpad = Raphael.sketchpad("sketch" + thisLine, {
-				width: thisWidth,
-				height: thisHeight,
-				editing: true
-			})
-			sketchpads.push(sketchpad)
-			sketchdivs.push(sketch)
+			
+			//Create the sketchpad if it needs to be created
+			var sketchpad
+			if(sketchpads.length > thisLine) {
+				sketchpad = sketchpads[thisLine]
+			}
+			else {
+				sketchpad = Raphael.sketchpad("sketch" + thisLine, {
+					width: thisWidth,
+					height: thisHeight,
+					editing: true
+				})
+				sketchpads.push(sketchpad)
+			}
 			
 			thisLine += 1
 		}
