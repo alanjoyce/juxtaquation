@@ -48,6 +48,8 @@
 	var activePadNum = -1
 	var w
 	var h
+	var sideWidth
+	var clusterColors = ['#B0171F', "#104E8B", "#aaaa22", "#eeff22", "#aaffaa", "#ee5555", "#ffffaa", "#22aa22", "#79CDCD", "#00FF00", "#FFD700", "#D2691E", "#71C671", "#EEB4B4"]
 	
 	//When the document loads, set everything up
 	$(document).ready(function() {
@@ -66,6 +68,7 @@
 	function setupPaper() {
 		h = $(document).height()
 		w = h*0.773
+		sideWidth = w/10
 		if(canvas) {
 			canvas.height = h - 25
 			canvas.width = w
@@ -81,7 +84,6 @@
 		con.beginPath()
 		con.strokeStyle = "#aaa"
 		con.lineWidth = 2
-		var sideWidth = w/10
 		var origin = $(canvas).offset()
 		
 		var thisLine = 0
@@ -144,6 +146,33 @@
 		con.moveTo(sideWidth, 0)
 		con.lineTo(sideWidth, h)
 		con.stroke();
+		
+		if(activePadNum > 0) {
+			drawActiveIndicator()
+		}
+	}
+	
+	//Draw the active pad indicator
+	function drawActiveIndicator() {
+		//Clear all the indicator areas
+		for(var i = 0; i < sketchdivs.length; i++) {
+			var sketch = sketchdivs[i]
+			var iLeft = 1
+			var iTop = sketch.position().top - 5
+			var iWidth = sideWidth - 10
+			var iHeight = sketch.height() - 5
+			
+			con.clearRect(iLeft, iTop, iWidth, iHeight)
+		}
+		
+		//Draw the correct indicator
+		var sketch = getActiveDiv()
+		var iLeft = 4
+		var iTop = sketch.position().top - 5
+		var iWidth = sideWidth - 10
+		var iHeight = sketch.height() - 10
+		con.fillStyle = "#ff4444"
+		con.fillRect(iLeft, iTop, iWidth, iHeight)
 	}
 	
 	//Returns the currently active sketchpad div
@@ -188,6 +217,9 @@
 				editNextPad($(this).attr('id'))
 			})
 		}
+		
+		//Redraw the active pad indicator
+		drawActiveIndicator()
 	}
 	
 	//Handle user edits to the active sketchpad
@@ -199,7 +231,6 @@
 			nextPad.clear()
 			nextPad.strokes(activePad.strokes())
 		}
-		
 		clusterStrokes()
 	}
 	
@@ -212,9 +243,133 @@
 		}
 	}
 	
+	//Get normalized average distance for a set of clusters
+	function getAvgDistance(clusters, centers) {
+		var avgDist = 0.0
+		var numPoints = 0
+		
+		for(var i = 0; i < centers.length; i++) {
+			var thisClusterDist = 0.0
+			for(var j = 0; j < clusters[i].length; j++) {
+				thisClusterDist += Math.abs(clusters[i][j].x - centers[i])
+				numPoints++
+			}
+			avgDist += thisClusterDist / (clusters[i].length * 2.0)
+		}
+		
+		avgDist /= clusters.length
+		avgDist += 100.0 * Math.pow(clusters.length / numPoints, 3)
+		
+		return avgDist
+	}
+	
 	//Cluster the strokes on the active pad
 	function clusterStrokes() {
+		var paths = getActiveDiv().find("path")
+		var strokes = getActivePad().strokes()
 		
+		var points = new Array()
+		
+		for(var i = 0; i < strokes.length; i++) {
+			var thisPath = paths[i]
+			var thisStroke = strokes[i]
+			
+			var bbox = thisPath.getBBox()
+			var centerX = (bbox.x + (bbox.x + bbox.width)) / 2.0
+			//var centerY = (bbox.y + (bbox.y + bbox.height)) / 2.0
+			points.push({'i':i, 'x':centerX})
+		}
+		
+		//Perform k-means clustering on the points
+		var goodEnough = false
+		var bestClusters = new Array()
+		var bestAvgDistance = -1
+		var k = 1
+		while(!goodEnough && k <= paths.length) {
+			//Find the clusters for this k
+			var theseClusters = new Array()
+			
+			//Pick k random center points
+			var centers = new Array()
+			for(var i = 0; i < k; i++) {
+				var candidate = -1
+				do {
+					candidate = points[Math.floor(Math.random() * points.length)].x
+				}
+				while($.inArray(candidate, centers) != -1)
+				centers.push(candidate)
+			}
+			
+			//Iterate until convergence
+			var numLoops = 0
+			while(numLoops < 10) {
+				//For each center, create a cluster
+				theseClusters = new Array()
+				for(var i = 0; i < centers.length; i++) {
+					theseClusters.push(new Array())
+				}
+				
+				//Put each point in its closest cluster
+				for(var i = 0; i < points.length; i++) {
+					//Start in the 0th center
+					var bestCluster = 0
+					var bestDist = Math.abs(points[i].x - centers[0])
+					
+					//Check the other centers
+					for(var j = 1; j < centers.length; j++) {
+						var thisDist = Math.abs(points[i].x - centers[j])
+						if(thisDist < bestDist) {
+							bestDist = thisDist
+							bestCluster = j
+						}
+					}
+					
+					//Place the point in the cluster
+					theseClusters[bestCluster].push(points[i])
+				}
+				
+				//Recalculate centers
+				for(var i = 0; i < centers.length; i++) {
+					var thisAvg = 0.0
+					for(var j = 0; j < theseClusters[i].length; j++) {
+						thisAvg += theseClusters[i][j].x
+					}
+					thisAvg /= theseClusters[i].length
+					centers[i] = thisAvg
+				}
+				
+				console.log(centers)
+				
+				numLoops++
+			}
+			
+			//If this k is worse than the previous k, stop here
+			var thisAvgDistance = getAvgDistance(theseClusters, centers)
+			console.log("avg dist is " + thisAvgDistance + " with k " + k)
+			if(bestAvgDistance > 0 && thisAvgDistance >= bestAvgDistance) {
+				goodEnough = true
+			}
+			//Otherwise, keep going
+			else {
+				bestClusters = theseClusters
+				bestAvgDistance = thisAvgDistance
+			}
+			
+			k++
+		}
+		
+		console.log(bestClusters)
+		
+		//Go through each cluster and assign colors
+		for(var i = 0; i < bestClusters.length; i++) {
+			for(var j = 0; j < bestClusters[i].length; j++) {
+				var thisStroke = strokes[bestClusters[i][j].i]
+				thisStroke.stroke = clusterColors[i]
+			}
+		}
+		
+		getActivePad().redrawNow()
+		getNextPad().redrawNow()
 	}
 </script>
 

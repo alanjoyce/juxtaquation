@@ -221,6 +221,10 @@
 			return self; // function-chaining
 		};
 		
+		self.redrawNow = function() {
+			_redraw_strokes()
+		}
+		
 		self.animate = function(ms) {
 			if (ms === undefined) {
 				ms = 500;
