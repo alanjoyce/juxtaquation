@@ -67,8 +67,9 @@
 	//Ensure that the paper is the correct size
 	function setupPaper() {
 		h = $(document).height()
-		w = h*0.773
-		sideWidth = w/10
+		//w = h*0.773 //portrait
+		w = h*1.294 //landscape
+		sideWidth = w/15
 		if(canvas) {
 			canvas.height = h - 25
 			canvas.width = w
@@ -80,7 +81,7 @@
 	//Draw the paper
 	function drawPaper() {
 		//Draw the lines
-		var lineHeight = h/12
+		var lineHeight = h/14
 		con.beginPath()
 		con.strokeStyle = "#aaa"
 		con.lineWidth = 2
@@ -159,7 +160,7 @@
 			var sketch = sketchdivs[i]
 			var iLeft = 1
 			var iTop = sketch.position().top - 5
-			var iWidth = sideWidth - 10
+			var iWidth = sideWidth - 8
 			var iHeight = sketch.height() - 5
 			
 			con.clearRect(iLeft, iTop, iWidth, iHeight)
@@ -167,12 +168,20 @@
 		
 		//Draw the correct indicator
 		var sketch = getActiveDiv()
-		var iLeft = 4
+		var iLeft = 12
 		var iTop = sketch.position().top - 5
-		var iWidth = sideWidth - 10
+		var iWidth = sideWidth - 22
 		var iHeight = sketch.height() - 10
 		con.fillStyle = "#ff4444"
-		con.fillRect(iLeft, iTop, iWidth, iHeight)
+		
+		//Draw the triangle
+		con.beginPath()
+		con.moveTo(iLeft, iTop)
+		con.lineTo(iLeft + iWidth, iTop + (iHeight / 2.0))
+		con.lineTo(iLeft, iTop + iHeight)
+		con.lineTo(iLeft, iTop)
+		con.fill()
+		con.closePath()
 	}
 	
 	//Returns the currently active sketchpad div
@@ -239,7 +248,7 @@
 		if(padNum == "sketch" + (activePadNum + 1)) {
 			//Make the next pad the new active pad
 			setActivePad(activePadNum + 1)
-			clusterStrokes()
+			newClusters = clusterStrokes()
 		}
 	}
 	
@@ -254,11 +263,11 @@
 				thisClusterDist += Math.abs(clusters[i][j].x - centers[i])
 				numPoints++
 			}
-			avgDist += thisClusterDist / (clusters[i].length * 2.0)
+			avgDist += thisClusterDist / clusters[i].length
 		}
 		
 		avgDist /= clusters.length
-		avgDist += 100.0 * Math.pow(clusters.length / numPoints, 3)
+		avgDist += 175.0 * (clusters.length / numPoints)
 		
 		return avgDist
 	}
@@ -370,6 +379,8 @@
 		
 		getActivePad().redrawNow()
 		getNextPad().redrawNow()
+		
+		return bestClusters
 	}
 </script>
 
