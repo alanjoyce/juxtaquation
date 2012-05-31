@@ -222,8 +222,8 @@
 		getActivePad().change(editActivePad)
 		var nextDiv = getNextDiv()
 		if(nextDiv) {
-			nextDiv.mousedown(function() {
-				editNextPad($(this).attr('id'))
+			nextDiv.find("svg").mousedown(function() {
+				editNextPad($(this).parent().attr('id'))
 			})
 		}
 		
@@ -248,7 +248,7 @@
 		if(padNum == "sketch" + (activePadNum + 1)) {
 			//Make the next pad the new active pad
 			setActivePad(activePadNum + 1)
-			newClusters = clusterStrokes()
+			clusterStrokes(true)
 		}
 	}
 	
@@ -273,7 +273,7 @@
 	}
 	
 	//Cluster the strokes on the active pad
-	function clusterStrokes() {
+	function clusterStrokes(isNextPad) {
 		var paths = getActiveDiv().find("path")
 		var strokes = getActivePad().strokes()
 		
@@ -347,14 +347,14 @@
 					centers[i] = thisAvg
 				}
 				
-				console.log(centers)
+				// console.log(centers)
 				
 				numLoops++
 			}
 			
 			//If this k is worse than the previous k, stop here
 			var thisAvgDistance = getAvgDistance(theseClusters, centers)
-			console.log("avg dist is " + thisAvgDistance + " with k " + k)
+			// console.log("avg dist is " + thisAvgDistance + " with k " + k)
 			if(bestAvgDistance > 0 && thisAvgDistance >= bestAvgDistance) {
 				goodEnough = true
 			}
@@ -367,7 +367,7 @@
 			k++
 		}
 		
-		console.log(bestClusters)
+		// console.log(bestClusters)
 		
 		//Go through each cluster and assign colors
 		for(var i = 0; i < bestClusters.length; i++) {
@@ -377,10 +377,39 @@
 			}
 		}
 		
+		if(isNextPad){
+			var clusterToDel = null;
+			for(var i = 0; i < bestClusters.length; i++){
+				for(var j = 0; j < bestClusters[i].length; j++){
+					// Get the last stroke
+					if(bestClusters[i][j].i == strokes.length-1){
+						// Shouldn't delete the last stroke
+						clusterToDel = bestClusters[i]
+						clusterToDel.splice(j, 0)
+					}
+				}
+			}
+			
+			// Build up new array discarding strokes
+			if(clusterToDel.length > 0){
+				var newStrokes = new Array()
+				for(var i = 0; i < strokes.length; i++){
+					var isInDeleteList = false;
+					for(var j = 0; j < clusterToDel.length; j++){
+						if(clusterToDel[j].i == i){
+							isInDeleteList = true;
+						}
+					}					
+					if(!isInDeleteList){
+						newStrokes.push(strokes[i])
+					}
+				}
+				getActivePad().strokes(newStrokes)
+			}
+		}
+
 		getActivePad().redrawNow()
 		getNextPad().redrawNow()
-		
-		return bestClusters
 	}
 </script>
 
