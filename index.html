@@ -51,7 +51,7 @@
 	var w
 	var h
 	var sideWidth
-	var clusterColors = ['#B0171F', "#104E8B", "#aaaa22", "#eeff22", "#aaffaa", "#ee5555", "#ffffaa", "#22aa22", "#79CDCD", "#00FF00", "#FFD700", "#D2691E", "#71C671", "#EEB4B4"]
+	var clusterColors = ['rgb(230,159,0)', 'rgb(86,180,233)', 'rgb(0,158,115)', 'rgb(240,228,66)', 'rgb(0,114,178)', 'rgb(213,94,0)', 'rgb(204,121,167)']
 	
 	//When the document loads, set everything up
 	$(document).ready(function() {
@@ -293,11 +293,21 @@
 		
 		for(var i = 0; i < centers.length; i++) {
 			var thisClusterDist = 0.0
+			var clusterMin = clusters[i][0].x
+			var clusterMax = clusters[i][0].x
 			for(var j = 0; j < clusters[i].length; j++) {
 				thisClusterDist += Math.abs(clusters[i][j].x - centers[i])
 				numPoints++
+				
+				if(clusters[i][j].x < clusterMin) {
+					clusterMin = clusters[i][j].x
+				}
+				if(clusters[i][j].x > clusterMax) {
+					clusterMax = clusters[i][j].x
+				}
 			}
-			avgDist += thisClusterDist / clusters[i].length
+			var clusterWidth = Math.abs(clusterMax - clusterMin)
+			avgDist += (thisClusterDist / clusters[i].length)
 		}
 		
 		avgDist /= clusters.length
@@ -409,7 +419,7 @@
 		for(var i = 0; i < bestClusters.length; i++) {
 			for(var j = 0; j < bestClusters[i].length; j++) {
 				var thisStroke = strokes[bestClusters[i][j].i]
-				thisStroke.stroke = clusterColors[i]
+				thisStroke.stroke = clusterColors[i % clusterColors.length]
 			}
 		}
 		
