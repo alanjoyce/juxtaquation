@@ -45,7 +45,9 @@
 	var con
 	var sketchpads = new Array()
 	var sketchdivs = new Array()
+	var clearButton = null
 	var activePadNum = -1
+	var needToCheckNewPad = false
 	var w
 	var h
 	var sideWidth
@@ -229,6 +231,31 @@
 		
 		//Redraw the active pad indicator
 		drawActiveIndicator()
+		
+		//Create the clear button if needed
+		if(clearButton == null) {
+			$("#main").append('<a href="javascript:clearButtonClicked();" id="clearButton">clear</a>')
+			clearButton = $("#clearButton")
+			
+			//Set up the clear button's click event
+			//clearButton.click(clearButtonClicked)
+		}
+		
+		//Position the clear button correctly
+		clearButton.css({
+			position: "absolute",
+			left: (getActiveDiv().position().left + getActiveDiv().width()) + "px",
+			top: getActiveDiv().position().top + 5 + "px",
+			width: "65px",
+			height: getActiveDiv().height() - 10 + "px",
+			lineHeight: getActiveDiv().height() - 10 + "px",
+			background: "#22aaee"
+		})
+	}
+	
+	//Handle a clear button click
+	function clearButtonClicked() {
+		getActivePad().clear()
 	}
 	
 	//Handle user edits to the active sketchpad
@@ -240,7 +267,14 @@
 			nextPad.clear()
 			nextPad.strokes(activePad.strokes())
 		}
-		clusterStrokes()
+		
+		if(needToCheckNewPad) {
+			clusterStrokes(true)
+			needToCheckNewPad = false
+		}
+		else {
+			clusterStrokes(false)
+		}
 	}
 	
 	//Handle user edits to the next sketchpad
@@ -248,7 +282,7 @@
 		if(padNum == "sketch" + (activePadNum + 1)) {
 			//Make the next pad the new active pad
 			setActivePad(activePadNum + 1)
-			clusterStrokes(true)
+			needToCheckNewPad = true
 		}
 	}
 	
@@ -379,27 +413,42 @@
 			}
 		}
 		
+		//If we just entered a new pad, do some deletion
 		if(isNextPad){
-			var clusterToDel = null;
-			for(var i = 0; i < bestClusters.length; i++){
-				for(var j = 0; j < bestClusters[i].length; j++){
+			var foundCluster = false
+			var clusterI = -1
+			for(var i = 0; i < bestClusters.length && !foundCluster; i++){
+				for(var j = 0; j < bestClusters[i].length && !foundCluster; j++){
 					// Get the last stroke
 					if(bestClusters[i][j].i == strokes.length-1){
 						// Shouldn't delete the last stroke
-						clusterToDel = bestClusters[i]
-						clusterToDel.splice(j, 0)
+						//clusterToDel.concat(bestClusters[i])
+						//console.log(bestClusters[i])
+						//clusterToDel.splice(j, 1)
+						
+						clusterI = i
+						foundCluster = true
 					}
 				}
 			}
 			
+			var strokesToDel = new Array()
+			for(var i = 0; i < bestClusters[clusterI].length; i++) {
+				if(bestClusters[clusterI][i].i != strokes.length-1) {
+					strokesToDel.push(bestClusters[clusterI][i].i)
+				}
+			}
+			
+			console.log(strokesToDel)
+			
 			// Build up new array discarding strokes
-			if(clusterToDel.length > 0){
+			if(strokesToDel.length > 0){
 				var newStrokes = new Array()
 				for(var i = 0; i < strokes.length; i++){
-					var isInDeleteList = false;
-					for(var j = 0; j < clusterToDel.length; j++){
-						if(clusterToDel[j].i == i){
-							isInDeleteList = true;
+					var isInDeleteList = false
+					for(var j = 0; j < strokesToDel.length; j++){
+						if(strokesToDel[j] == i){
+							isInDeleteList = true
 						}
 					}					
 					if(!isInDeleteList){
