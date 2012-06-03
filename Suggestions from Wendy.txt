@@ -1,0 +1,8 @@
+crossing out indicates grouping to delete
+floating equals sign
+grayed out next line
+"show me my work"
+grid lines for columns
+	floating equals snaps
+store results externally?
+drag active pointer to go back to a previous sketchpad
