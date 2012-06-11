@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Juxtaquation</title>
+	<link href='http://fonts.googleapis.com/css?family=Gochi+Hand|Quattrocento+Sans' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+	<div class="box">
+		<h2>Juxtaquation: Try it out!</h2>
+		<p>Juxtaquation is live at <a href="http://www.smithery.org/juxta/">http://www.smithery.org/juxta/</a></p>
+		
+		<h2 id="intro">Needfinding and Related Work</h2>
+		<p>Juxtaquation was loosely inspired by Juxtapaper, a project to bridge the physical/virtual divide encountered when solving complex problems. Juxtapaper was a mixed-media toolkit that sought to encourage ownership of data exploration and problem solving through the use of physical paper. Physical paper has properties and affordances not readily available in the digital world. Physical paper can be rotated, carried around, easily marked and juxtaposed on top of each other, hence the name "Juxtaquation". Our project is concerned with the equation editing domain where the disadvantages and advantages of a purely analog paper or completely digital medium are more exaggerated than in other tasks.</p> 		
+		<p>When solving equations on the computer, input can be difficult. Using WYSIWG toolboxes such as Microsoft Equation Editor can be cumbersome because of frequent switching input modalities: typing and acquiring a target. Text editors such as VIM or Emacs have gotten around address this problem for writing code or passages of text that require little formatting using many keyboard shortcuts. For equation edition, professionally typesetting equations is usually done with the TeX distribution platform, a markup language with a high barrier to entry. It involves learning complex syntax and formatting procedures. However, tweaking parts of an equation (e.g. going through the derivation of a proof) can be much easier due to copying and pasting and other macros.</p>
+		<p>On paper, an "undo" function incurs significant cost in effort and in the material. Rewriting and shuffling around expressions on paper can be painful when mistakes have to be erased and written again. When you erase too much, you might end up having to redo the entire page because it is in such disarray. Our interviewees mentioned writing each page as if it were a final draft, saying that paper only "becomes a draft when it's wrong". However, participants cite paper as a quick and easy way to explore spatial dimensions of a problem, which can be more restrictive in computer programs. Interviewees said they use paper to think about how things interact and "I can't make equations come to life on a computer". Later, they will translate these equations to code and use computer to more for explore possibilities, runtime tuning and tweaking parameters. The derivation and conceptual modeling occurs on paper, with the functional version on computer last.</p>
+
+		<h2 id="focusa">Focus Area: Simplifying</h2>
+		<p>Much research on equation editing in the HCI domain is concerned with recognizing characters and expressions using computer vision and machine learning.</p>
+		<p>From observing real users and introspection into our own problem solving processes, we noticed that at each step of solving an equation is a simplification process. Expression are transformed from </p>
+
+		<h2 id="implementation">Implementation</h2>
+		<p>
+		Juxtaquation is currently a client-side HTML5 web application implemented using HTML5 canvas, CSS and Javascript. Juxtaquation extends Ian Li's <a href="http://ianli.com/sketchpad/">Sketchpad</a>, a simple drawing editor built on the jQuery framework and Raphael.js Javascript library for handling SVG graphic elements. Sketchpad makes it easy to to represent mouse actions as stroke objects and be able to manipulate these later. Since Juxtaquation is on the web, it can be easily deployed and is accessible on any computer with a modern browser. Juxtaquation's input method would ideally be a tablet with a stylus device for writing though there is nothing preventing one from using the mouse.</p>
+		<p>We use a k-means clustering algorithm to segment parts of the equation. The heuristic we use in our k-means algorithm is horizontal distance from other strokes, with a penalty for creating multiple clusters of few elements. This algorithm embeds no semantic knowledge of the equation contents but instead attempts to detect parts of the equation by spatial position.</p>
+		
+		<h2 id="interaction">Interaction</h2>
+		<p>
+		Visually, Juxtaquation mirrors the appearance of lined paper. A red triangle indicates the active line on the page. The algorithm tries to guess which are distinct pieces (clusters) of an equation and color-codes them to give users feedback. The clusters dynamically update with every new stroke. The next line is a mirror of the current line and only becomes actives when one starts writing in it. Deleting or redoing parts of an equation is done by writing in the next line. The algorithm will replace the cluster closest to where the new stroke appears on the next line with whatever you will write next while preserving the rest of the equation.
+		</p>
+		
+		<h2 id="future_ui">Future Work: User Interface Improvements</h2>
+		<p>Cross out to delete</p>
+		<p>Undo / Start over from a previous line
+"It's such a feeling of failure, its like oh no, I've wasted one of my lines"</p>
+		<p>Floating equals sign</p>
+		<p>Grid lines or other visual suggestion as to how user should space equations</p>
+
+		<h2 id="future_research">Future Work: Research Questions</h2>	
+		<p>
+Behavioral: what are people's preconceptions of how the system works? how do people adapt to the algorithm?
+Cognitive: does rewriting the same parts of an equation aid problem solving?
+UI: Explicit undo or eraser versus rewrite over in next line
+Playback and "show your work" yet to be explored
+First, we are planning to bring the existing prototype to a state where it can be effectively tested in real-world settings.
+
+Next, we hope to design and undertake experimental trials in which we introduce real users to Juxtapaper and observe their performance of various tasks.
+Finally, we want to aggregate and synthesize observations from these experiments to assess the suitability of Juxtapaper for the given tasks, gain a clear sense of direction for future improvements in the system, and draw wider conclusions about user interaction with such hybrid interfaces.
+
+We decided to create a mixed-media system for recording paper and digital annotations. We imagine this system can be used for graphical interpretation and diagramming. We thought the task might be having kids explain their data interpretation process by capturing "snapshots" of their process along the way.
+
+		</p>
+	</div>
+	
+
+
+</body>
+</html>	
