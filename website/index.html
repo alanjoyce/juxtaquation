@@ -19,8 +19,7 @@
 		<p>On paper, an "undo" function incurs significant cost in effort and in the material. Rewriting and shuffling around expressions on paper can be painful when mistakes have to be erased and written again. When you erase too much, you might end up having to redo the entire page because it is in such disarray. Our interviewees mentioned writing each page as if it were a final draft, saying that paper only "becomes a draft when it's wrong". However, participants cite paper as a quick and easy way to explore spatial dimensions of a problem, which can be more restrictive in computer programs. Interviewees said they use paper to think about how things interact and "I can't make equations come to life on a computer". Later, they will translate these equations to code and use computer to more for explore possibilities, runtime tuning and tweaking parameters. The derivation and conceptual modeling occurs on paper, with the functional version on computer last.</p>
 
 		<h2 id="focusa">Focus Area: Simplifying</h2>
-		<p>Much research on equation editing in the HCI domain is concerned with recognizing characters and expressions using computer vision and machine learning.</p>
-		<p>From observing real users and introspection into our own problem solving processes, we noticed that at each step of solving an equation is a simplification process. Expression are transformed from </p>
+		<p>Much research on equation editing in the HCI domain is concerned with recognizing characters and expressions using computer vision and machine learning. Instead trying to infer user intention or intelligently suggest ways for people to solve equations, we focus on making the process of inputting equations easier. From observing real users and introspection into our own problem solving processes, we noticed that at each step of solving an equation is a simplification process. Expressions are transformed in pieces until a workable solution reveals itself. When simplifying, only part of an equation might change, while the other pieces remain the same. Copying over the rest of the equation can be a tedious task. On paper, people might use a placeholder such as the ellipsis É or an equals sign rotated 90 degrees to indicate that this part gets carried through but does not change. Additionally, rewriting the unchanged parts can introduce more opportunities for error.</p>
 
 		<h2 id="implementation">Implementation</h2>
 		<p>
@@ -33,25 +32,20 @@
 		</p>
 		
 		<h2 id="future_ui">Future Work: User Interface Improvements</h2>
-		<p>Cross out to delete</p>
-		<p>Undo / Start over from a previous line
-"It's such a feeling of failure, its like oh no, I've wasted one of my lines"</p>
-		<p>Floating equals sign</p>
-		<p>Grid lines or other visual suggestion as to how user should space equations</p>
+		<p>Our algorithm would often cluster elements together that the user might not have intended, such as operators or the equals since. Since in any equation, an equals sign must be presents, Wendy had suggested we implement a "floating" equals sign that the user can move horizontally. The equals sign acts as a substrate, gently suggesting and framing our system as one used for math and problem solving. Users might also build up a mental model of how the algorithm works that is not consistent with the horizontal distance heuristic and be surprised when it does not act according to their model. To influence their behavior to conform with our algorithm's expectations, a visual suggestion as to how user should space equations such as gridlines could be added.</p>
+		<p>Although we do not try to parse the semantics from the equation, perhaps a common and easily detectable action is crossing out to delete. Since deleting is based on clustering, users often try to "group" the items they want to delete on the current line before moving onto the next line. We could simplify this action with a gesture such as crossing out (by drawing a line from bottom left to top right corner as the "imaginary bounding box") to delete.</p>
+		<p>Another common suggestion users voiced was the lack of ability to undo or start over from a previous line. One participant mentioned "It's such a feeling of failure, its like oh no, I've wasted one of my lines." Currently the red indicator triangle for the current line has no functional purpose, it is used only as an indicator. We could imagine using the triangle as a way to navigate to a previous line or to navigate through elapsed time.</p>
 
-		<h2 id="future_research">Future Work: Research Questions</h2>	
+		<h2 id="future_research">Future Work: Research Questions</h2>
+		<p>While preliminary informal user tests demonstrated interest in the Juxtaquation's concept, we . Next, we hope to design and undertake experimental trials in which we introduce real users to Juxtaquation and observe their performance on various tasks.
+Finally, we want to aggregate and synthesize observations from these experiments to assess the suitability of Juxtaquation for the given tasks, gain a clear sense of direction for future improvements in the system, and draw wider conclusions about user interaction with digital paper interfaces.</p>
 		<p>
 Behavioral: what are people's preconceptions of how the system works? how do people adapt to the algorithm?
 Cognitive: does rewriting the same parts of an equation aid problem solving?
 UI: Explicit undo or eraser versus rewrite over in next line
 Playback and "show your work" yet to be explored
 First, we are planning to bring the existing prototype to a state where it can be effectively tested in real-world settings.
-
-Next, we hope to design and undertake experimental trials in which we introduce real users to Juxtapaper and observe their performance of various tasks.
-Finally, we want to aggregate and synthesize observations from these experiments to assess the suitability of Juxtapaper for the given tasks, gain a clear sense of direction for future improvements in the system, and draw wider conclusions about user interaction with such hybrid interfaces.
-
-We decided to create a mixed-media system for recording paper and digital annotations. We imagine this system can be used for graphical interpretation and diagramming. We thought the task might be having kids explain their data interpretation process by capturing "snapshots" of their process along the way.
-
+For students learning algebra for the first time, Juxtaquation could be leveraged as a tool for capturing "snapshots" of their problem solving process.
 		</p>
 	</div>
 	
