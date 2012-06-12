@@ -25,6 +25,11 @@ p.subtitle {
 	margin-top: 10px;
 	margin-bottom: 40px;
 	color: #888;
+	line-height: 1em;
+}
+
+span.subsubtitle {
+	font-size: 0.75em;
 }
 
 img.right {
