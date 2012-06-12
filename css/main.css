@@ -1,14 +1,39 @@
 /* stripe 81cbbc */
 
 body {
-	background: #fff;
-	margin-top: 10px;
+	background: #222;
+	margin-top: 20px;
+	font-size: 0.9em;
+	line-height: 1.4;
+	margin-bottom: 40px;
 }
 
 p {
 	padding: 0;
-	line-height: 1.4;
-	font-size: 14px;
+	margin-top: 1.5em;
+}
+
+p.title {
+	font-size: 2.8em;
+	text-align: center;
+	margin-top: 0;
+}
+
+p.subtitle {
+	font-size: 1.7em;
+	text-align: center;
+	margin-top: 10px;
+	margin-bottom: 40px;
+	color: #888;
+}
+
+ul {
+	list-style-type: disc;
+}
+
+li {
+	margin-left: 2em;
+	margin-top: 0.3em;
 }
 
 a {
@@ -34,10 +59,12 @@ a.launch {
 	margin: 0 auto;
 	background-color: #fff;
 	border: 1px solid #333;
+	box-shadow: 0px 2px 6px #111;
 }
 h2
 {
 	position: relative;
+	line-height: 1em;
 	width: 100%;
 	font-size: 1.5em;
 	font-weight: bold;
@@ -47,8 +74,6 @@ h2
 	color: #333;
 	background-color: #999;
 	text-shadow: 0px 1px 2px #bbb;
-	-webkit-box-shadow: 0px 2px 4px #888;
-	-moz-box-shadow: 0px 2px 4px #888;
 	box-shadow: 0px 2px 4px #888;
 }
 
@@ -63,6 +88,7 @@ h2:before
 	border-width: 20px 10px;
 	border-style: solid;
 	border-color: #999 #999 #999 transparent;
+	box-shadow: 0px 2px 4px #222;
 }
 
 
