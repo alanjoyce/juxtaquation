@@ -7,8 +7,17 @@ body {
 
 p {
 	padding: 0;
-	line-height: 20px;
+	line-height: 1.4;
 	font-size: 14px;
+}
+
+a {
+	color: #6666cc;
+}
+
+a.launch {
+	font-size: 2em;
+	line-height: 2;
 }
 
 /* containing element */

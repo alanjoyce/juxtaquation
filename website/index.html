@@ -11,7 +11,10 @@
 
 	<div class="box">
 		<h2>Juxtaquation: Try it out!</h2>
-		<p>Juxtaquation is live at <a href="http://www.smithery.org/juxta/">http://www.smithery.org/juxta/</a></p>
+		<p>
+			<a href="http://www.smithery.org/juxta/" target="_blank" class="launch">Launch Juxtaquation</a><br />
+			(works best in <a href="http://google.com/chrome">Google Chrome</a>)
+		</p>
 		
 		<h2 id="intro">Needfinding and Related Work</h2>
 		<p>Juxtaquation was loosely inspired by Juxtapaper, a project to bridge the physical/virtual divide encountered when solving complex problems. Juxtapaper was a mixed-media toolkit that sought to encourage ownership of data exploration and problem solving through the use of physical paper. Physical paper has properties and affordances not readily available in the digital world. Physical paper can be rotated, carried around, easily marked and juxtaposed on top of each other, hence the name "Juxtaquation". Our project is concerned with the equation editing domain where the disadvantages and advantages of a purely analog paper or completely digital medium are more exaggerated than in other tasks.</p> 		
@@ -19,7 +22,7 @@
 		<p>On paper, an "undo" function incurs significant cost in effort and in the material. Rewriting and shuffling around expressions on paper can be painful when mistakes have to be erased and written again. When you erase too much, you might end up having to redo the entire page because it is in such disarray. Our interviewees mentioned writing each page as if it were a final draft, saying that paper only "becomes a draft when it's wrong". However, participants cite paper as a quick and easy way to explore spatial dimensions of a problem, which can be more restrictive in computer programs. Interviewees said they use paper to think about how things interact and "I can't make equations come to life on a computer". Later, they will translate these equations to code and use computer to more for explore possibilities, runtime tuning and tweaking parameters. The derivation and conceptual modeling occurs on paper, with the functional version on computer last.</p>
 
 		<h2 id="focusa">Focus Area: Simplifying</h2>
-		<p>Much research on equation editing in the HCI domain is concerned with recognizing characters and expressions using computer vision and machine learning. Instead trying to infer user intention or intelligently suggest ways for people to solve equations, we focus on making the process of inputting equations easier. From observing real users and introspection into our own problem solving processes, we noticed that at each step of solving an equation is a simplification process. Expressions are transformed in pieces until a workable solution reveals itself. When simplifying, only part of an equation might change, while the other pieces remain the same. Copying over the rest of the equation can be a tedious task. On paper, people might use a placeholder such as the ellipsis É or an equals sign rotated 90 degrees to indicate that this part gets carried through but does not change. Additionally, rewriting the unchanged parts can introduce more opportunities for error.</p>
+		<p>Much research on equation editing in the HCI domain is concerned with recognizing characters and expressions using computer vision and machine learning. Instead trying to infer user intention or intelligently suggest ways for people to solve equations, we focus on making the process of inputting equations easier. From observing real users and introspection into our own problem solving processes, we noticed that at each step of solving an equation is a simplification process. Expressions are transformed in pieces until a workable solution reveals itself. When simplifying, only part of an equation might change, while the other pieces remain the same. Copying over the rest of the equation can be a tedious task. On paper, people might use a placeholder such as the ellipsis (...) or an equals sign rotated 90 degrees to indicate that this part gets carried through but does not change. Additionally, rewriting the unchanged parts can introduce more opportunities for error.</p>
 
 		<h2 id="implementation">Implementation</h2>
 		<p>
@@ -40,10 +43,14 @@
 		<p>While preliminary informal user tests demonstrated interest in the Juxtaquation's concept, we . Next, we hope to design and undertake experimental trials in which we introduce real users to Juxtaquation and observe their performance on various tasks.
 Finally, we want to aggregate and synthesize observations from these experiments to assess the suitability of Juxtaquation for the given tasks, gain a clear sense of direction for future improvements in the system, and draw wider conclusions about user interaction with digital paper interfaces.</p>
 		<p>
-Behavioral: what are people's preconceptions of how the system works? how do people adapt to the algorithm?
-Cognitive: does rewriting the same parts of an equation aid problem solving?
-UI: Explicit undo or eraser versus rewrite over in next line
-Playback and "show your work" yet to be explored
+			<ul>
+<li>Behavioral: What are people's preconceptions of how the system works? How do people adapt to the algorithm?
+<li>Cognitive: Does rewriting the same parts of an equation aid problem solving?
+<li>UI: Explicit undo or eraser versus rewrite over in next line
+Playback and "show your work" yet to be explored.
+			</ul>
+		</p>
+		<p>
 First, we are planning to bring the existing prototype to a state where it can be effectively tested in real-world settings.
 For students learning algebra for the first time, Juxtaquation could be leveraged as a tool for capturing "snapshots" of their problem solving process.
 		</p>
